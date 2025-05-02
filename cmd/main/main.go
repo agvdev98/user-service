@@ -3,6 +3,9 @@ package main
 import (
 	"github.com/agvdev98/user-service/initializers"
 	"github.com/agvdev98/user-service/internal/db"
+	"github.com/agvdev98/user-service/internal/handler"
+	"github.com/agvdev98/user-service/internal/repository"
+	"github.com/agvdev98/user-service/internal/service"
 	"github.com/gin-gonic/gin"
 	"log"
 )
@@ -19,17 +22,19 @@ func main() {
 	initializers.SyncDatabase(database)
 
 	// DI
-	//userRepo := repository.NewUserRepository(database)
-	//userService := service.NewUserService(userRepo)
+	userRepository := repository.NewUserRepository(database)
+	userService := service.NewUserService(userRepository)
+
+	// Init handler
+	userHandler := handler.NewUserHandler(userService)
 
 	// Router
 	r := gin.Default()
 
 	// Routes
-	r.GET("/users", func(c *gin.Context) {
-		// Aquí usarías userService.FindAllUsers()
-
-	})
+	r.GET("/users", userHandler.GetAllUsers)
+	r.GET("/user/:id", userHandler.GetUserByID)
+	r.POST("/", userHandler.CreateUser)
 
 	// Run server
 	if err := r.Run(); err != nil {
