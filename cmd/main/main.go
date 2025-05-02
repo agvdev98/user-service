@@ -33,7 +33,7 @@ func main() {
 
 	// Routes
 	r.GET("/users", userHandler.GetAllUsers)
-	r.GET("/user/:id", userHandler.GetUserByID)
+	r.GET("/users/:id", userHandler.GetUserByID)
 	r.POST("/", userHandler.CreateUser)
 
 	// Run server
