@@ -19,17 +19,9 @@ func SetupRouter(userHandler *handler.UserHandler, authHandler *handler.AuthHand
 		protected.DELETE("/:id", userHandler.DeleteUser)
 
 	}
+	router.POST("/register", userHandler.CreateUser)
 
-	public := router.Group("/users")
-	public.Use(middleware.JWTMiddleware())
-	{
-		public.POST("/register", userHandler.CreateUser)
-	}
-
-	authGroup := router.Group("/auth")
-	{
-		authGroup.POST("/login", authHandler.Login)
-	}
-
+	router.POST("/login", authHandler.Login)
+	
 	return router
 }
