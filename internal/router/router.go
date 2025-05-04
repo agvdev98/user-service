@@ -1,8 +1,8 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/agvdev98/user-service/internal/handler"
+	"github.com/gin-gonic/gin"
 )
 
 func SetupRouter(userHandler *handler.UserHandler) *gin.Engine {

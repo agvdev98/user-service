@@ -22,6 +22,24 @@ func ToUserDTO(user *model.User) dto.UserResponseDTO {
 	}
 }
 
+func ToUpdatedUser(id uint, dto dto.UserUpdateRequestDTO) *model.User {
+	user := &model.User{
+		ID: id,
+	}
+
+	if dto.Name != nil {
+		user.Name = *dto.Name
+	}
+	if dto.Email != nil {
+		user.Email = *dto.Email
+	}
+	if dto.Password != nil {
+		user.Password = *dto.Password
+	}
+
+	return user
+}
+
 func ToUserDTOList(users []model.User) []dto.UserResponseDTO {
 	res := make([]dto.UserResponseDTO, len(users))
 	for i, u := range users {

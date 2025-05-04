@@ -84,19 +84,23 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 
 	userId := uint(id)
 
-	var userDTO dto.UserRequestDTO
-	if err := c.ShouldBindJSON(&userDTO); err != nil {
+	var userUpdateDTO dto.UserUpdateRequestDTO
+	if err := c.ShouldBindJSON(&userUpdateDTO); err != nil {
 		log.Printf("Error binding JSON: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input data"})
 		return
 	}
 
-	user := mapper.ToUser(userDTO)
+	user := mapper.ToUpdatedUser(userId, userUpdateDTO)
 	user.ID = userId
 
 	updatedUser, err := h.userService.UpdateUser(user)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not update user"})
+		if err.Error() == "user not found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not update user"})
+		}
 		return
 	}
 
