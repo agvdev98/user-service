@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter(userHandler *handler.UserHandler) *gin.Engine {
+func SetupRouter(userHandler *handler.UserHandler, authHandler *handler.AuthHandler) *gin.Engine {
 	router := gin.Default()
 
 	// Routes
@@ -18,5 +18,11 @@ func SetupRouter(userHandler *handler.UserHandler) *gin.Engine {
 		userGroup.DELETE("/:id", userHandler.DeleteUser)
 
 	}
+
+	authGroup := router.Group("/auth")
+	{
+		authGroup.POST("/login", authHandler.Login)
+	}
+
 	return router
 }

@@ -25,8 +25,9 @@ func main() {
 	userRepository := repository.NewUserRepository(database)
 	userService := service.NewUserService(userRepository)
 	userHandler := handler.NewUserHandler(userService)
+	authHandler := handler.NewAuthHandler(userService)
 
-	r := router.SetupRouter(userHandler)
+	r := router.SetupRouter(userHandler, authHandler)
 
 	// Run server
 	if err := r.Run(); err != nil {
