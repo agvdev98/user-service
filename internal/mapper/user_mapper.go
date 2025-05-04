@@ -19,6 +19,7 @@ func ToUserDTO(user *model.User) dto.UserResponseDTO {
 		ID:    user.ID,
 		Name:  user.Name,
 		Email: user.Email,
+		Role:  user.Role,
 	}
 }
 
