@@ -23,7 +23,8 @@ func NewUserHandler(service service.UserService) *UserHandler {
 func (h *UserHandler) GetAllUsers(c *gin.Context) {
 	users, err := h.userService.FindAllUsers()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		log.Printf("Error: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Couldn't get users"})
 		return
 	}
 	c.JSON(http.StatusOK, mapper.ToUserDTOList(users))
@@ -43,6 +44,7 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 
 	user, err := h.userService.FindUserByID(userId)
 	if err != nil {
+		log.Printf("User not found: ID %d", userId)
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
