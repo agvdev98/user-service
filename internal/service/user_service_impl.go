@@ -4,7 +4,9 @@ import (
 	"errors"
 	"github.com/agvdev98/user-service/internal/model"
 	"github.com/agvdev98/user-service/internal/repository"
+	"github.com/agvdev98/user-service/internal/security"
 	"golang.org/x/crypto/bcrypt"
+	"log"
 	"strings"
 )
 
@@ -36,6 +38,10 @@ func (s *userServiceImpl) CreateUser(user *model.User) (*model.User, error) {
 
 func (s *userServiceImpl) FindUserByID(id uint) (*model.User, error) {
 	return s.repo.FindUserByID(id)
+}
+
+func (s *userServiceImpl) FindUserByEmail(email string) (*model.User, error) {
+	return s.repo.FindUserByEmail(email)
 }
 
 func (s *userServiceImpl) FindAllUsers() ([]model.User, error) {
@@ -74,4 +80,23 @@ func (s *userServiceImpl) DeleteUser(id uint) error {
 	}
 
 	return s.repo.DeleteUser(user.ID)
+}
+
+func (s *userServiceImpl) Authenticate(email string, password string) (string, error) {
+	user, err := s.repo.FindUserByEmail(email)
+	if err != nil {
+		return "", errors.New("invalid credentials")
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
+		return "", errors.New("invalid credentials")
+	}
+
+	token, err := security.GenerateToken(user.ID, user.Role)
+	if err != nil {
+		log.Printf("Failed to generate token: %v", err)
+		return "", errors.New("failed to generate token")
+	}
+
+	return token, nil
 }

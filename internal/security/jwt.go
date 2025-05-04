@@ -34,6 +34,7 @@ func ValidateToken(tokenString string) (*jwt.Token, error) {
 			return nil, errors.New("invalid signing method")
 		}
 		return jwtSecretKey, nil
+
 	})
 	if err != nil {
 		return nil, err
