@@ -68,6 +68,10 @@ func (s *userServiceImpl) UpdateUser(user *model.User) (*model.User, error) {
 }
 
 func (s *userServiceImpl) DeleteUser(id uint) error {
+	user, err := s.repo.FindUserByID(id)
+	if err != nil {
+		return errors.New("user not found")
+	}
 
-	return s.repo.DeleteUser(id)
+	return s.repo.DeleteUser(user.ID)
 }
