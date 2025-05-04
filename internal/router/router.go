@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/agvdev98/user-service/internal/handler"
+	"github.com/agvdev98/user-service/internal/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -9,14 +10,20 @@ func SetupRouter(userHandler *handler.UserHandler, authHandler *handler.AuthHand
 	router := gin.Default()
 
 	// Routes
-	userGroup := router.Group("/users")
+	protected := router.Group("/users")
+	protected.Use(middleware.JWTMiddleware(), middleware.RequireRole("ADMIN"))
 	{
-		userGroup.GET("/", userHandler.GetAllUsers)
-		userGroup.GET("/:id", userHandler.GetUserByID)
-		userGroup.POST("/", userHandler.CreateUser)
-		userGroup.PUT("/:id", userHandler.UpdateUser)
-		userGroup.DELETE("/:id", userHandler.DeleteUser)
+		protected.GET("/all", userHandler.GetAllUsers)
+		protected.GET("/:id", userHandler.GetUserByID)
+		protected.PUT("/:id", userHandler.UpdateUser)
+		protected.DELETE("/:id", userHandler.DeleteUser)
 
+	}
+
+	public := router.Group("/users")
+	public.Use(middleware.JWTMiddleware())
+	{
+		public.POST("/register", userHandler.CreateUser)
 	}
 
 	authGroup := router.Group("/auth")
