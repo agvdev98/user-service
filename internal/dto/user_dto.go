@@ -7,9 +7,9 @@ type UserRequestDTO struct {
 }
 
 type UserUpdateRequestDTO struct {
-	Name     *string `json:"name" binding:"min=1,max=100,omitempty"`
-	Email    *string `json:"email" binding:"email,omitempty"`
-	Password *string `json:"password" binding:"min=6,omitempty"`
+	Name     *string `json:"name" binding:"omitempty,min=1,max=100"`
+	Email    *string `json:"email" binding:"omitempty,email"`
+	Password *string `json:"password" binding:"omitempty,min=6"`
 }
 
 type UserResponseDTO struct {
