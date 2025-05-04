@@ -5,8 +5,8 @@ import (
 	"github.com/agvdev98/user-service/internal/db"
 	"github.com/agvdev98/user-service/internal/handler"
 	"github.com/agvdev98/user-service/internal/repository"
+	"github.com/agvdev98/user-service/internal/router"
 	"github.com/agvdev98/user-service/internal/service"
-	"github.com/gin-gonic/gin"
 	"log"
 )
 
@@ -24,17 +24,9 @@ func main() {
 	// DI
 	userRepository := repository.NewUserRepository(database)
 	userService := service.NewUserService(userRepository)
-
-	// Init handler
 	userHandler := handler.NewUserHandler(userService)
 
-	// Router
-	r := gin.Default()
-
-	// Routes
-	r.GET("/users", userHandler.GetAllUsers)
-	r.GET("/users/:id", userHandler.GetUserByID)
-	r.POST("/", userHandler.CreateUser)
+	r := router.SetupRouter(userHandler)
 
 	// Run server
 	if err := r.Run(); err != nil {
