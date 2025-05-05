@@ -22,6 +22,6 @@ func SetupRouter(userHandler *handler.UserHandler, authHandler *handler.AuthHand
 	router.POST("/register", userHandler.CreateUser)
 
 	router.POST("/login", authHandler.Login)
-	
+
 	return router
 }
