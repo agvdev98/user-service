@@ -13,4 +13,6 @@ func SetupCORS(r *gin.Engine) {
 	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
 	config.AllowCredentials = true
 	config.MaxAge = 12 * time.Hour
+
+	r.Use(cors.New(config))
 }

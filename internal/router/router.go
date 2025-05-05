@@ -3,11 +3,13 @@ package router
 import (
 	"github.com/agvdev98/user-service/internal/handler"
 	"github.com/agvdev98/user-service/internal/middleware"
+	"github.com/agvdev98/user-service/internal/security"
 	"github.com/gin-gonic/gin"
 )
 
 func SetupRouter(userHandler *handler.UserHandler, authHandler *handler.AuthHandler) *gin.Engine {
 	router := gin.Default()
+	security.SetupCORS(router)
 
 	// Routes
 	protected := router.Group("/users")
